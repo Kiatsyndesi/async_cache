@@ -21,6 +21,8 @@ func (c *Cache) Set(key, value string) error {
 	if err != nil {
 		return ErrNotFound
 	}
+
+	return nil
 }
 
 func (c *Cache) Get(key string) (string, error) {
@@ -40,4 +42,6 @@ func (c *Cache) Delete(key string) error {
 	if err == nil {
 		return errors.New("the key has not been removed\n")
 	}
+
+	return nil
 }
