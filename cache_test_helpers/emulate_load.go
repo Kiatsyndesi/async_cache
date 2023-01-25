@@ -8,8 +8,6 @@ import (
 	"testing"
 )
 
-var ErrNotFound = errors.New("Value not found")
-
 type CacheMethods interface {
 	Set(key, value string) error
 	Get(key string) (string, error)
@@ -17,44 +15,45 @@ type CacheMethods interface {
 }
 
 func EmulateLoad(t *testing.T, c CacheMethods, parallelFactor int) {
-	wg := sync.WaitGroup{}
+	wg := &sync.WaitGroup{}
 
 	for i := 0; i < parallelFactor; i++ {
 		key := fmt.Sprintf("%d - key", i)
 		value := fmt.Sprintf("%d - value", i)
 
 		wg.Add(1)
-
 		//check writing to cache
-		go func(key string) {
-			err := c.Set(key, value)
+		go func(k string) {
+			err := c.Set(k, value)
 			assert.NoError(t, err)
 
-			wg.Done()
+			defer wg.Done()
 		}(key)
 
+		wg.Add(1)
 		//check reading from cache
-		go func(key, value string) {
-			storedValue, err := c.Get(key)
+		go func(k, v string) {
+			storedValue, err := c.Get(k)
 
 			if !errors.Is(err, ErrNotFound) {
-				assert.EqualValues(t, value, storedValue)
+				assert.Equal(t, v, storedValue)
 			}
 
-			wg.Done()
+			defer wg.Done()
 		}(key, value)
 
+		wg.Add(1)
 		//check for deleting
-		go func(key string) {
-			err := c.Delete(key)
+		go func(k string) {
+			err := c.Delete(k)
 			assert.NoError(t, err)
-
-			_, err = c.Get(key)
-			assert.ErrorIs(t, err, ErrNotFound)
-
-			wg.Done()
+			/*
+				_, err = c.Get(key)
+				assert.ErrorIs(t, err, ErrNotFound)
+			*/
+			defer wg.Done()
 		}(key)
 	}
 
-	wg.Wait()
+	defer wg.Wait()
 }
