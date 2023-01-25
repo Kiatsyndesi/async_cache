@@ -1,4 +1,4 @@
-package async_cache
+package cache_v1
 
 import "errors"
 
@@ -12,6 +12,12 @@ type CacheMethods interface {
 
 type Cache struct {
 	storage map[string]string
+}
+
+func NewCache() CacheMethods {
+	return &Cache{
+		storage: make(map[string]string),
+	}
 }
 
 func (c *Cache) Set(key, value string) error {
