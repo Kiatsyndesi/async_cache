@@ -8,12 +8,6 @@ import (
 	"testing"
 )
 
-type CacheMethods interface {
-	Set(key, value string) error
-	Get(key string) (string, error)
-	Delete(key string) error
-}
-
 func EmulateLoad(t *testing.T, c CacheMethods, parallelFactor int) {
 	wg := &sync.WaitGroup{}
 

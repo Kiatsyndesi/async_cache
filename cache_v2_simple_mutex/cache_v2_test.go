@@ -1,4 +1,4 @@
-package cache_v2
+package cache_v2_simple_mutex
 
 import (
 	"github.com/Kiatsyndesi/async_cache/cache_test_helpers"

@@ -1,4 +1,4 @@
-package cache_v2
+package cache_v3_rw_mutex
 
 import (
 	"github.com/Kiatsyndesi/async_cache/cache_test_helpers"
@@ -13,7 +13,7 @@ type CacheMethods interface {
 
 type Cache struct {
 	storage map[string]string
-	mu      sync.Mutex
+	mu      sync.RWMutex
 }
 
 func NewCache() *Cache {
@@ -37,8 +37,8 @@ func (c *Cache) Set(key, value string) error {
 }
 
 func (c *Cache) Get(key string) (string, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 
 	value, ok := c.storage[key]
 

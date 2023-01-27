@@ -1,4 +1,4 @@
-package cache_v1
+package cache_v1_without_concurrency
 
 import (
 	"github.com/Kiatsyndesi/async_cache/cache_test_helpers"

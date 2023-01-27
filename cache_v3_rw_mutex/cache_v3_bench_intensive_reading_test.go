@@ -1,4 +1,4 @@
-package cache_v1
+package cache_v3_rw_mutex
 
 import (
 	"github.com/Kiatsyndesi/async_cache/cache_test_helpers"
@@ -7,10 +7,10 @@ import (
 
 const parallelFactor = 10_000
 
-func Benchmark_Cache_Without_Mutex (b *testing.B) {
+func Benchmark_Cache_With_Mutex(b *testing.B) {
 	c := NewCache()
 
 	for i := 0; i < b.N; i++ {
-		cache_test_helpers.EmulateLoadForBench(c, parallelFactor)
+		cache_test_helpers.EmulateLoadForBenchWithIntensiveReading(c, parallelFactor)
 	}
 }
